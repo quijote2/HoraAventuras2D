@@ -120,7 +120,15 @@ public class EnemyController : MonoBehaviour
     }
     void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, detectionRadius);
+        // Solo dibujar el Gizmo si el objeto está dentro de la vista de la cámara principal
+        if (Camera.main != null)
+        {
+            Vector3 screenPoint = Camera.main.WorldToViewportPoint(transform.position);
+            if (screenPoint.x >= 0 && screenPoint.x <= 1 && screenPoint.y >= 0 && screenPoint.y <= 1 && screenPoint.z > 0)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawWireSphere(transform.position, detectionRadius);
+            }
+        }
     }
 }

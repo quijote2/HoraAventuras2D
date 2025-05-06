@@ -7,31 +7,23 @@ public class PlayerController : MonoBehaviour
     public float velocidad = 5f;
     public int vida = 3;
 
-    public float fuerzaSalto = 10f; 
-    public float fuerzaRebote = 6f; 
-    public float longitudRaycast = 0.1f; 
-    public LayerMask capaSuelo; 
+    public float fuerzaSalto = 10f;
+    public float fuerzaRebote = 6f;
+    public float longitudRaycast = 0.1f;
+    public LayerMask capaSuelo;
 
-    private bool enSuelo; 
+    private bool enSuelo;
     private bool recibiendoDanio;
     private bool atacando;
     public bool muerto;
 
-    private Rigidbody2D rb; 
+    private Rigidbody2D rb;
 
     public Animator animator;
-    public GameObject rangoEspada; // Referencia al objeto RangoEspada
-
-    private Vector3 rangoEspadaOffsetDerecha = new Vector3(0.7f, 0f, 0f);
-    private Vector3 rangoEspadaOffsetIzquierda = new Vector3(-0.7f, 0f, 0f);
-    private int direccion = 1; // 1 = derecha, -1 = izquierda
-
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        if (rangoEspada != null)
-            rangoEspada.SetActive(false); // Asegura que la espada esté desactivada al inicio
     }
 
     // Update is called once per frame
@@ -57,13 +49,13 @@ public class PlayerController : MonoBehaviour
                 Atacando();
             }
         }
-        
+
         animator.SetBool("ensuelo", enSuelo);
         animator.SetBool("recibeDanio", recibiendoDanio);
         animator.SetBool("Atacando", atacando);
         animator.SetBool("muerto", muerto);
     }
-       
+
     public void Movimiento()
     {
         float velocidadX = Input.GetAxis("Horizontal") * Time.deltaTime * velocidad;
@@ -73,21 +65,10 @@ public class PlayerController : MonoBehaviour
         if (velocidadX < 0)
         {
             transform.localScale = new Vector3(-1, 1, 1);
-            direccion = -1;
         }
         if (velocidadX > 0)
         {
             transform.localScale = new Vector3(1, 1, 1);
-            direccion = 1;
-        }
-
-        // Cambia la posición del rango de la espada según la dirección
-        if (rangoEspada != null)
-        {
-            if (direccion == 1)
-                rangoEspada.transform.localPosition = rangoEspadaOffsetDerecha;
-            else
-                rangoEspada.transform.localPosition = rangoEspadaOffsetIzquierda;
         }
 
         Vector3 posicion = transform.position;
@@ -97,11 +78,11 @@ public class PlayerController : MonoBehaviour
     }
     public void RecibeDanio(Vector2 direccion, int cantDanio)
     {
-        if(!recibiendoDanio)
+        if (!recibiendoDanio)
         {
             recibiendoDanio = true;
             vida -= cantDanio;
-            if (vida<=0)
+            if (vida <= 0)
             {
                 muerto = true;
             }
@@ -122,14 +103,11 @@ public class PlayerController : MonoBehaviour
     public void Atacando()
     {
         atacando = true;
-        animator.SetBool("Atacando", true); // Activa la animación de ataque
-        Debug.Log("¡Atacando!");
     }
 
     public void DesactivaAtaque()
     {
         atacando = false;
-        animator.SetBool("Atacando", false); // Desactiva la animación de ataque
     }
 
     void OnDrawGizmos()
